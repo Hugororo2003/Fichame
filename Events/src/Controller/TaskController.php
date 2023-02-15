@@ -18,7 +18,8 @@ class TaskController extends AbstractController
 
         return $this->render('task/index.html.twig', [
             'controller_name' => 'TaskController',
-            'tasks' => $taskRepository->findAll()
+            'tasks' => $taskRepository->findAll(),
+            'allMyTasks' => $taskRepository->findByUser($this->getUser()),
 
         ]);
     }
@@ -32,9 +33,12 @@ class TaskController extends AbstractController
         //El estado 1 es Aceptado
         //El estado 0 es Rechazado
 
-        $fecha= new \DateTime();
+        $fecha = new \DateTime();
         $task->setStateRequest($state_request);
         $task->setStatusResolveDate($fecha);
+
+        $fecha= new \DateTime();
+        $task-> setStatusResolveDate($fecha);
 
         $taskRepository->save($task, true);
 
@@ -51,10 +55,11 @@ class TaskController extends AbstractController
         //En state NULL es no asignado
 
         $breakTime = $request->get("breakHours");
-        if(!$breakTime) $breakTime=0;
+        if (!$breakTime)
+            $breakTime = 0;
 
         $task->setBreakTime($breakTime);
-        
+
 
         // $task->setState($state);
 
@@ -73,16 +78,18 @@ class TaskController extends AbstractController
             $task->setStartTime($fecha);   
             $task->setStartTimeCompare($fecha);
 
-            
+
         }
 
+
         
 
 
-            
-            
-            // $state_request=2;
-        
+
+
+
+        // $state_request=2;
+
 
         // $task->setStateRequest($state_request);
         $taskRepository->save($task, true);
@@ -94,27 +101,52 @@ class TaskController extends AbstractController
 
 
     }
+    #[Route('/seeAsignedTasks', name: 'app_seeAsignedTasks', methods: ['GET', 'POST'])]
 
-    #[Route('/seeTaskToday', name: 'app_ seeTaskToday', methods: ['GET', 'POST'])]
-    public function seeTaskToday(Request $request,  TaskRepository $taskRepository): Response
+    public function seeAsignedTasks(Request $request, TaskRepository $taskRepository): Response
     {
-    
-     /* Hoy de mañana
-       $hoy= new \DateTime('2023-02-11');*/
-       
-       //hoy de hoy 
-       $hoy= new \DateTime();
-       $tomorrow= new \DateTime('2023-02-11');
+        $tasks = $taskRepository->findBy([
+            'state_request' => 1,
+            'User' => $this->getUser()->getId(),
+        ]
+        );
+
+        return $this->render('task/extra.html.twig',[
+            'tasks' => $tasks
+        ]);
+
+    }
+
+    #[Route('/seeTaskToday', name: 'app_seeTaskToday', methods: ['GET', 'POST'])]
+    public function seeTaskToday(Request $request, TaskRepository $taskRepository): Response
+    {
+
+        /* Hoy de mañana
+        $hoy= new \DateTime('2023-02-11');*/
+
+        //hoy de hoy 
+        $hoy = new \DateTime();
+        $tomorrow = new \DateTime('2023-02-11');
 
 
         return $this->render('task/taskfull.html.twig', [
             'tasks' => $taskRepository->findAll(),
-            'hoy'=>$hoy,
-            'tomorrow'=>$tomorrow,
-            
+            'hoy' => $hoy,
+            'tomorrow' => $tomorrow,
+
         ]);
 
 
-    
+
+    }
+
+    #[Route('/updateExtra/{id}',name:'app_task_edit_extra',methods: ['GET', 'POST'])]
+    public function editTaskExtra(TaskRepository $taskRespository,Request $request, Task $task){
+
+            $task->setExtraTime($request->get('extra_time'));
+            
+            $taskRespository->save($task,true);
+            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+        
     }
 }

@@ -55,7 +55,7 @@ class TaskRepository extends ServiceEntityRepository
             $task -> getStartTime();
             
         }
-        
+
         $this->save($task, true);
     }
 
@@ -105,6 +105,19 @@ class TaskRepository extends ServiceEntityRepository
         ;
     }
 
+    public function showAcceptedTasksByUser(User $user): array
+    {
+        //Esto es para el state_request
+        $userId = $user->getId();
+
+        return $this->createQueryBuilder('task')
+            ->andWhere('task.state_request=1 and task.User=:userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 
 
 
@@ -125,28 +138,29 @@ class TaskRepository extends ServiceEntityRepository
     {
         //Esto es para el state
         $userId = $user->getId();
-        $date= new \DateTime();
-        $now=$date->format('Y-m-d');
+        $date = new \DateTime();
 
         //comprobamos si hay alguna tarea comenzada
-        $return=$this->createQueryBuilder('task')
+        $return = $this->createQueryBuilder('task')
             ->andWhere('task.state_request=1 and task.state=1 and task.User=:userId and task.end_time is NULL and task.start_time is not NULL')
             ->setParameter('userId', $userId)
             ->getQuery()
             ->getResult()
         ;
-        if(count($return)>0){
-            
-            return $return;
-    
-        }else{
+        if (count($return) > 0)
+        {
 
-            //si no hay ninguna comenzada , sa
+            return $return;
+
+        }
+        else
+        {
+            //si no hay ninguna comenzada
+            //task.state_request=1 and task.state=1 and task.User=:userId and e.start_time>= :date_start and task.end_time is NULL
             return $this->createQueryBuilder('task')
             ->join('task.Event', 'e')
             ->andWhere('task.state_request=1 and task.state=1 and task.User=:userId and e.start_date <= :date and e.end_date >= :date and task.end_time is NULL')
             ->setParameter('userId', $userId)
-            ->setParameter('date', $now)
             ->getQuery()
             ->getResult()
             ;
@@ -154,12 +168,12 @@ class TaskRepository extends ServiceEntityRepository
         
     }
 
-//    public function showAsignByUser(User $user): array
+    //    public function showAsignByUser(User $user): array
 //    {
 
-//     $userId=$user->getId();
+    //     $userId=$user->getId();
 
-//        return $this->createQueryBuilder('task')
+    //        return $this->createQueryBuilder('task')
 //            ->andWhere('task.state_request=3 and task.User=:userId and task.state=:state')
 //            ->setParameter('userId', $userId)
 //            ->setParameter('state', 1)
@@ -167,6 +181,50 @@ class TaskRepository extends ServiceEntityRepository
 //            ->getResult()
 //        ;
 //    }
+
+
+    //    public function showAsignByUser(User $user): array
+//    {
+
+    //     $userId=$user->getId();
+
+    //        return $this->createQueryBuilder('task')
+//            ->andWhere('task.state_request=1 and task.User=:userId')
+//            ->setParameter('userId', $userId)
+//            ->getQuery()
+//            ->getResult()
+//        ;
+//    }
+
+    //    public function showAsignByUser(User $user): array
+//    {
+
+    //     $userId=$user->getId();
+
+    //        return $this->createQueryBuilder('task')
+//            ->andWhere('task.state_request=3 and task.User=:userId and task.state=:state')
+//            ->setParameter('userId', $userId)
+//            ->setParameter('state', 1)
+//            ->getQuery()
+//            ->getResult()
+//        ;
+//    }
+
+    /**
+     * @return Task[] Returns an array of Task objects
+     */
+    public function showAsignTasksByUser(User $user): array
+    {
+
+        $userId = $user->getId();
+
+        return $this->createQueryBuilder('task')
+            ->andWhere('task.state_request=1 and task.state=1 and task.User=:userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 
 
