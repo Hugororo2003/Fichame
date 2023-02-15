@@ -96,19 +96,19 @@ class TaskController extends AbstractController
 
     public function seeAsignedTasks(Request $request, TaskRepository $taskRepository): Response
     {
-        $tasks = $taskRepository->findAllBy([
-            'state => 1',
-            'user => ' + $this->getUser()
+        $tasks = $taskRepository->findBy([
+            'state_request' => 1,
+            'User' => $this->getUser()->getId(),
         ]
         );
 
-        return $this->redirectToRoute('task/index.html.twig',[
+        return $this->render('task/extra.html.twig',[
             'tasks' => $tasks
         ]);
 
     }
 
-    #[Route('/seeTaskToday', name: 'app_ seeTaskToday', methods: ['GET', 'POST'])]
+    #[Route('/seeTaskToday', name: 'app_seeTaskToday', methods: ['GET', 'POST'])]
     public function seeTaskToday(Request $request, TaskRepository $taskRepository): Response
     {
 
@@ -129,5 +129,15 @@ class TaskController extends AbstractController
 
 
 
+    }
+
+    #[Route('/updateExtra/{id}',name:'app_task_edit_extra',methods: ['GET', 'POST'])]
+    public function editTaskExtra(TaskRepository $taskRespository,Request $request, Task $task){
+
+            $task->setExtraTime($request->get('extra_time'));
+            
+            $taskRespository->save($task,true);
+            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+        
     }
 }
