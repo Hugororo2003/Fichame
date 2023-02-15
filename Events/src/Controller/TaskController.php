@@ -37,6 +37,9 @@ class TaskController extends AbstractController
         $task->setStateRequest($state_request);
         $task->setStatusResolveDate($fecha);
 
+        $fecha= new \DateTime();
+        $task-> setStatusResolveDate($fecha);
+
         $taskRepository->save($task, true);
 
         return $this->redirectToRoute('app_main', [], Response::HTTP_SEE_OTHER);
@@ -74,6 +77,8 @@ class TaskController extends AbstractController
 
         }
 
+
+        
 
 
 

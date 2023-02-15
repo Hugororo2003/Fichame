@@ -62,7 +62,6 @@
 					<li>
 						Nombre de la tarea:{{task.Event.name}}<br>
 
-
 						{% if (task.isState()== 1 and task.getStateRequest()==1 and task.getStartTime()== NULL) %}
 
 							<a href="{{ path('app_task_update_State', {'id': task.id}) }}">
@@ -83,6 +82,8 @@
 							{% set showMessage = false %}
 
 						{% endif %}
+
+
 					</li>
 
 
@@ -128,6 +129,9 @@
 		{% endif %}
 
 </div>
+
+		
+
 
 	</div>
 {% endblock %}
