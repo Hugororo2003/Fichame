@@ -63,11 +63,15 @@ class TaskController extends AbstractController
         
         if($task->getStartTime()!=NULL){
             $fecha= new \DateTime();
+            if ($task->getStartTime() != $task->getEvent()->getEndDate()){
+                $taskRepository->createTomorrowTask($task->getEvent(),$this->getUser(),$task->getStartTime() );
+            }
             $task->setEndTime($fecha);
         
         }else{
             $fecha= new \DateTime();
-            $task->setStartTime($fecha);        
+            $task->setStartTime($fecha);   
+            $task->setStartTimeCompare($fecha);
 
             
         }

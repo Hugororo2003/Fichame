@@ -23,6 +23,8 @@ class MainController extends AbstractController
     public function index(TaskRepository $taskRepository): Response
     {
         $user = $this->getUser();
+        $date= new \DateTime();
+        $now=$date->format('Y-m-d'); 
 
         if ($user)
         {
@@ -30,6 +32,7 @@ class MainController extends AbstractController
 
                 'tasks' => $taskRepository->showPendingTasksByUser($user),
                 'taskAsignments' => $taskRepository->showAsignByUserUncompleted($user),
+                'now' => $now,
 
             ]);
 

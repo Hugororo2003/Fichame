@@ -59,18 +59,21 @@
 			{% for task in taskAsignments %}
 
 				<ul>
-					<li>
-						Nombre de la tarea:{{task.Event.name}}<br>
+					
+						
 
-
-						{% if (task.isState()== 1 and task.getStateRequest()==1 and task.getStartTime()== NULL) %}
-
+						
+		                
+						{% if (task.isState()== 1 and task.getStateRequest()==1 and task.getStartTime()== NULL and (task.getStartTimeCompare()|date('Y-m-d')== now or task.getStartTimeCompare()== NULL )  ) %}
+							<li>Nombre de la tarea:{{task.Event.name}}<br>
 							<a href="{{ path('app_task_update_State', {'id': task.id}) }}">
 								<button type="button">Comenzar Tarea</button>
 							</a>
 
 							{% set showMessage = true %}
-						{% else %}
+
+							{% endif %}
+						{% if (task.isState()== 1 and task.getStateRequest()==1 and task.getStartTime()!= NULL  )  %}
 
 							<form action="{{ path('app_task_update_State', {'id': task.id}) }}">
 

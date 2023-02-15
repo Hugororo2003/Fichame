@@ -44,6 +44,9 @@ class Task
     #[ORM\Column]
     private ?int $type = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $startTimeCompare = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -165,6 +168,18 @@ class Task
     public function setType(int $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getStartTimeCompare(): ?\DateTimeInterface
+    {
+        return $this->startTimeCompare;
+    }
+
+    public function setStartTimeCompare(?\DateTimeInterface $startTimeCompare): self
+    {
+        $this->startTimeCompare = $startTimeCompare;
 
         return $this;
     }

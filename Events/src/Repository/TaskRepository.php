@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Entity\Event;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use DateTimeInterface;
 
 /**
  * @extends ServiceEntityRepository<Task>
@@ -49,11 +50,27 @@ class TaskRepository extends ServiceEntityRepository
         $task->setUser($user);
         $task->setEvent($event);
         $task -> setType(0);
-        if ($task -> getUser() -> getRoles() == "ROLE_ALMACEN") {
+        if ($task -> getUser() -> getRoles() == "ROLE_WAREHOUSE") {
             $task -> setType(1);
             $task -> getStartTime();
             
         }
+        
+        $this->save($task, true);
+    }
+
+    public function createTomorrowTask(Event $event, User $user, \DatetimeInterface $date): void
+    {
+
+        $date->modify('+1 day');
+        $task = new Task();
+        $task->setUser($user);
+        $task->setState(1);
+        $task->setStateRequest(1);
+        $task->setStartTimeCompare($date);
+        $task->setEvent($event);
+        $task -> setType(0);
+        
         
         $this->save($task, true);
     }
@@ -127,7 +144,7 @@ class TaskRepository extends ServiceEntityRepository
             //si no hay ninguna comenzada , sa
             return $this->createQueryBuilder('task')
             ->join('task.Event', 'e')
-            ->andWhere('task.state_request=1 and task.state=1 and task.User=:userId and e.start_date = :date and task.end_time is NULL')
+            ->andWhere('task.state_request=1 and task.state=1 and task.User=:userId and e.start_date <= :date and e.end_date >= :date and task.end_time is NULL')
             ->setParameter('userId', $userId)
             ->setParameter('date', $now)
             ->getQuery()
