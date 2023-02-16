@@ -139,6 +139,7 @@ class TaskRepository extends ServiceEntityRepository
         //Esto es para el state
         $userId = $user->getId();
         $date = new \DateTime();
+        $now=$date->format('Y-m-d'); 
 
         //comprobamos si hay alguna tarea comenzada
         $return = $this->createQueryBuilder('task')
@@ -161,6 +162,7 @@ class TaskRepository extends ServiceEntityRepository
             ->join('task.Event', 'e')
             ->andWhere('task.state_request=1 and task.state=1 and task.User=:userId and e.start_date <= :date and e.end_date >= :date and task.end_time is NULL')
             ->setParameter('userId', $userId)
+            ->setParameter('date', $now)
             ->getQuery()
             ->getResult()
             ;
