@@ -36,6 +36,9 @@ class Company
     #[ORM\Column(nullable: true)]
     private ?int $salaryperhour = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $imagen = null;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -168,6 +171,18 @@ class Company
     public function setSalaryperhour(?int $salaryperhour): self
     {
         $this->salaryperhour = $salaryperhour;
+
+        return $this;
+    }
+
+    public function getImagen(): ?string
+    {
+        return $this->imagen;
+    }
+
+    public function setImagen(string $imagen): self
+    {
+        $this->imagen = $imagen;
 
         return $this;
     }
