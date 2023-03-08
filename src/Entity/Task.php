@@ -212,8 +212,10 @@ class Task
     public function getTotalTime(): int
     {
     $res=0;
-    $res= ($this->end_time->getTimestamp()-$this->start_time->getTimestamp()+$this->extra_time)/(3600);
-
+    //ESTE IF PERMITE QUE SI NO SE HA EMPEZADO LA TAREA SE PUEDA VISUALIZAR
+    if($this->start_time){
+      $res= ($this->end_time->getTimestamp()-$this->start_time->getTimestamp()+$this->extra_time)/(3600);
+    }
     return $res;
     }
 
