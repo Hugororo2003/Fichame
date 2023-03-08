@@ -24,7 +24,7 @@
                       </div>
                       {# Aquí añado el logo que se verá en toda la página #}
                       <div class="col-4 text-right">
-                        <img src="./images/sf.png" alt="" width='15%'>
+                        <img src="http://127.0.0.1:8000/images/sf.png" alt="" width='15%'>
                       </div>
                       <div class=" col-5 mx-2 my-1 text-right">
                           <a href="{{path("app_user_profile")}}"><i class="fa-solid fa-user"></i> <b>{{ app.user.userIdentifier }}({{ app.user.dni }})</b></a>  - <a href="{{path('app_company_show', {'nif':app.user.company.nif})}}">{{app.user.company.title}}({{app.user.company.nif}})</a> <a href="{{ path('app_logout') }}">Logout</a>
