@@ -10,8 +10,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/job')]
+// Este IsGranted impedirá que usuarios que no sean de almacén entren en jobs
+#[IsGranted('ROLE_ALMACEN')]
 class JobController extends AbstractController
 {
     #[Route('/', name: 'app_job_index', methods: ['GET'])]

@@ -34,7 +34,9 @@
 
              {#   <p> <form method="POST" action="{{path('app_comentario_edit',{'id':comentario.id })}}"> #}
 
-             <form method="POST" action="#">
+
+            {# Cambios para que el botón nos mande a editar la tarea #}
+             <form method="POST" action="/task/{{ task.id}}/edit">
                         <input role="button" class="BotonMargenIz btn btn-success" onclick="return confirm('¿Vas de modificar una tarea?')" class="BotonMargenIz" type="submit" value="Editar tarea"> </p>
                     </form>
                  

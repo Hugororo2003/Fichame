@@ -88,7 +88,8 @@ class TaskController extends AbstractController
             'totaltime' =>$task->getTotalTime(),
         ]);
     }
-
+    //Este IsGranted impedirá que usuarios normales editen task
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/edit', name: 'app_task_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Task $task, TaskRepository $taskRepository): Response
     {
@@ -106,7 +107,8 @@ class TaskController extends AbstractController
             'form' => $form,
         ]);
     }
-
+    //Y tampoco las podrán eliminar
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_task_delete', methods: ['POST'])]
     public function delete(Request $request, Task $task, TaskRepository $taskRepository): Response
     {
