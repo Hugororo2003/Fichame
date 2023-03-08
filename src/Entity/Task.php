@@ -184,6 +184,8 @@ class Task
     public function setExtraTime(?int $extra_time): self
     {
         $this->extra_time = $extra_time;
+
+        return $this;
     }
 
     public function getChore(): array

@@ -21,9 +21,9 @@ class JobController extends AbstractController
             'jobs' => $jobRepository->findAll(),
         ]);
     }
-
-    #[Route('/new', name: 'app_job_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, JobRepository $jobRepository, TaskRepository $taskRepository): Response
+    //Esta ruta servirá para añadirle al job una task, ya que por defecto se asignaba a la task 1 y por eso no se mostraba
+    #[Route('/{idtask}/new', name: 'app_job_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, JobRepository $jobRepository, TaskRepository $taskRepository, $idtask): Response
     {
         $job = new Job();
         $form = $this->createForm(JobType::class, $job);
@@ -32,6 +32,8 @@ class JobController extends AbstractController
         $job->setTaskId($taskRepository->findOneById(1));
         
         if ($form->isSubmitted() && $form->isValid()) {
+            //Esta linea seteará la task que queremos en su job
+            $job->setTask($taskRepository->findOneById($idtask));
             $jobRepository->save($job, true);
 
             return $this->redirectToRoute('app_warehouse', [], Response::HTTP_SEE_OTHER);
