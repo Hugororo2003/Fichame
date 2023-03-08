@@ -12,7 +12,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+// Este isGranted impide que los usuarios que no tengan el rol almacen entren
+#[IsGranted('ROLE_ALMACEN')]
 class WarehouseController extends AbstractController
 {
     #[Route('/warehouse', name: 'app_warehouse')]
