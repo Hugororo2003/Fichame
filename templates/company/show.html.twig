@@ -25,7 +25,9 @@
             </tr>
         </tbody>
     </table>
-
-    <a href="{{path("app_register", {'nif': company.nif})}}">Registrar en la compañía</a>
+    {# Este if impide que los usuarios que no sean super admin puedan registrar otros usuarios en la compañía #}
+    {% if is_granted("ROLE_SUPER_ADMIN") %}
+      <a href="{{path("app_register", {'nif': company.nif})}}">Registrar en la compañía</a>
+    {% endif %}
 {% endblock %}
 
