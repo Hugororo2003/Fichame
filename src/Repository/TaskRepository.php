@@ -233,6 +233,17 @@ class TaskRepository extends ServiceEntityRepository
         return $this->showAcceptedTasksByUser($user);
     }
 
+       public function findByType($value): array
+   {
+       return $this->createQueryBuilder('s')
+           ->andWhere('s.type = :val')
+           ->setParameter('val', $value)
+           ->orderBy('s.id', 'ASC')
+           ->getQuery()
+           ->getResult()
+       ;
+   }
+
     //    public function showAsignByUser(User $user): array
 //    {
 

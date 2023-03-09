@@ -33,7 +33,7 @@
 			<a href="/login">Login
 			</a>
 			-
-			<a href="/register">
+			<a href="/register/{{company[0].nif}}">
 				Registration</a>
 
 		{% endif %}
@@ -93,7 +93,7 @@
 
 			{% if showMessage %}
 
-				{% if is_granted("ROLE_ALMACEN")%}
+				{% if is_granted("ROLE_ALMACEN") and is_granted("ROLE_ADMIN")%}
 
           <a href="{{path('app_event_newAlmacen') }}">
           Almacen</a>

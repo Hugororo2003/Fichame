@@ -9,6 +9,9 @@ use App\Entity\User;
 use App\Entity\Company;
 use App\Form\CompanyType;
 use App\Repository\CompanyRepository;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -35,13 +38,33 @@ class CompanyController extends AbstractController
     
     #[IsGranted('ROLE_SUPER_ADMIN')]
     #[Route('admin/company/new', name: 'app_company_new', methods: ['GET','POST'])]
-    public function new(Request $request, CompanyRepository $companyRepository): Response
+    public function new(Request $request, CompanyRepository $companyRepository, SluggerInterface $slugger): Response
     {
         $company = new Company();
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $postLogo = $form->get('logo')->getData();
+
+            if ($postLogo) {
+                $originalFilename = pathinfo($postLogo->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$postLogo->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $postLogo->move(
+                        $this->getParameter('post_logo'),
+                        $newFilename
+                    );
+                    $company->setLogo($newFilename);
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+            }
+
             $companyRepository->save($company, true);
 
             return $this->redirectToRoute('app_company_index', [], Response::HTTP_SEE_OTHER);
@@ -53,13 +76,32 @@ class CompanyController extends AbstractController
     }
     #[IsGranted('ROLE_SUPER_ADMIN')]
     #[Route('/admin/company/{id}/edit', name: 'app_company_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Company $company, CompanyRepository $companyRepository): Response
+    public function edit(Request $request, Company $company, CompanyRepository $companyRepository, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $CompanyRepository->save($Company, true);
+            $postLogo = $form->get('logo')->getData();
+            if ($postLogo) {
+                $originalFilename = pathinfo($postLogo->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$postLogo->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $postLogo->move(
+                        $this->getParameter('post_logo'),
+                        $newFilename
+                    );
+                    $company->setLogo($newFilename);
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+            }
+
+            $companyRepository->save($company, true);
 
             return $this->redirectToRoute('app_company_index', [], Response::HTTP_SEE_OTHER);
         }
