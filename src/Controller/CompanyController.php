@@ -45,25 +45,6 @@ class CompanyController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $postLogo = $form->get('logo')->getData();
-
-            if ($postLogo) {
-                $originalFilename = pathinfo($postLogo->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$postLogo->guessExtension();
-
-                // Move the file to the directory where brochures are stored
-                try {
-                    $postLogo->move(
-                        $this->getParameter('post_logo'),
-                        $newFilename
-                    );
-                    $company->setLogo($newFilename);
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-            }
 
             $companyRepository->save($company, true);
 
@@ -82,24 +63,6 @@ class CompanyController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $postLogo = $form->get('logo')->getData();
-            if ($postLogo) {
-                $originalFilename = pathinfo($postLogo->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$postLogo->guessExtension();
-
-                // Move the file to the directory where brochures are stored
-                try {
-                    $postLogo->move(
-                        $this->getParameter('post_logo'),
-                        $newFilename
-                    );
-                    $company->setLogo($newFilename);
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-            }
 
             $companyRepository->save($company, true);
 
