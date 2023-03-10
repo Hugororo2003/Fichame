@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
+use App\Repository\CompanyRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,13 +15,13 @@ use Symfony\Component\Security\Core\Role\Role;
 class MainController extends AbstractController
 {
     #[Route('/', name: 'app_main')]
-    public function index(TaskRepository $taskRepository, UserRepository $userRepository): Response
+    public function index(TaskRepository $taskRepository, UserRepository $userRepository, CompanyRepository $companyRepository): Response
     {
       $user = $this->getUser();
       if ($user)
         {
           $date= new \DateTime();
-          $now=$date->format('Y-m-17'); 
+          $now=$date->format('Y-m-17');
             $user = $this->getUser();
             $user->setLastLogin(new \DateTime());
             $userRepository->save($user, true);
@@ -41,6 +42,7 @@ class MainController extends AbstractController
 
             return $this->render('main/index.html.twig', [
                 'controller_name' => 'MainController',
+                'company'=> $companyRepository->findAll(),
             ]);
 
         }

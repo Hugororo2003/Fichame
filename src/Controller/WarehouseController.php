@@ -21,7 +21,7 @@ class WarehouseController extends AbstractController
         
         return $this->render('warehouse/index.html.twig', [
             'controller_name' => 'WarehouseController',
-            'tareas' => $taskRepository->findAll(),
+            'tareas' => $taskRepository->findByType(1),
             'eventrep'=>$eventRepository,
             'horasmensuales'=>$taskRepository->getHorasRealizadas($taskRepository->getHorasMensuales(date('Y'), date('m')))
             
@@ -58,7 +58,7 @@ class WarehouseController extends AbstractController
             $taskRepository->save($task, true);
             return $this->redirectToRoute('app_warehouse', [
                 'controller_name' => 'WarehouseController',
-                'tareas' => $taskRepository->findAll(),
+                'tareas' => $taskRepository->findByType(1),
                 'eventrep'=>$eventRepository,
                 'horasmensuales'=>$taskRepository->getHorasRealizadas($taskRepository->getHorasMensuales(date('Y'), date('m')))
             ], Response::HTTP_SEE_OTHER);

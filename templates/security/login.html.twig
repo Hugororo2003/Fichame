@@ -3,7 +3,8 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-<main class=" container-fluid d-flex justify-content-center">
+<a href="/"><button class="btn btn-danger mt-2">Volver</button></a>
+<main class=" container-fluid d-flex justify-content-center">   
     <form method="post" class="p-3 mt-4 rounded col-3 bg-primary color">
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -23,6 +24,8 @@
             Sign in
         </button>
     </form>
+
+    
 </main>
 
 {% endblock %}
