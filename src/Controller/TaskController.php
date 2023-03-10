@@ -89,6 +89,7 @@ class TaskController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/edit', name: 'app_task_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Task $task, TaskRepository $taskRepository): Response
     {
@@ -107,6 +108,7 @@ class TaskController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_task_delete', methods: ['POST'])]
     public function delete(Request $request, Task $task, TaskRepository $taskRepository): Response
     {
@@ -161,7 +163,7 @@ class TaskController extends AbstractController
             $task->setEnd_Time($fecha);
         
         }else{
-            $task->setStart_Time($fecha);   
+            $task->setStart_Time($fecha);
             $task->setStartTimeCompare($fecha);
 
         }

@@ -11,6 +11,8 @@ use App\Form\CompanyType;
 use App\Repository\CompanyRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[IsGranted('ROLE_USER')]
 class CompanyController extends AbstractController
@@ -43,7 +45,6 @@ class CompanyController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $companyRepository->save($company, true);
-
             return $this->redirectToRoute('app_company_index', [], Response::HTTP_SEE_OTHER);
         }
         return $this->render('company/new.html.twig', [

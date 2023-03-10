@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/job')]
+// Forzamos a que sean de almacen para ver los jobs
+#[IsGranted('ROLE_ALMACEN')]
 class JobController extends AbstractController
 {
     #[Route('/', name: 'app_job_index', methods: ['GET'])]
